@@ -2,7 +2,10 @@ package me.hazedev.hapiexample.example;
 
 import me.hazedev.hapi.chat.ChatUtils;
 import me.hazedev.hapi.component.Component;
+import me.hazedev.hapi.config.YamlConfigReader;
+import me.hazedev.hapi.io.YamlFileHandler;
 import me.hazedev.hapi.logging.Log;
+import me.hazedev.hapiexample.example.config.ExampleConfig;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
@@ -39,16 +42,20 @@ public class ExampleComponent extends Component implements Listener {
         // This way when the component is disabled, the commands & listeners will also be disabled
         this.registerCommand(new ExampleCommand());
         this.registerListener(new ExampleListener());
-        // plugins/PluginName/ComponentId/example.yml
-        File exampleFile = new File(getDataFolder(), "example.yml");
+
+        // load config
+        YamlFileHandler fileHandler;
         try {
-            config = new ExampleConfig(exampleFile);
+            // plugins/PluginName/ComponentId/example.yml
+            fileHandler = getYamlFileHandler("example.yml");
         } catch (IOException e) {
             // Custom Log class with static access and more features
             Log.warning(this, "Failed to load config");
             Log.error(this, e);
+            return false;
         }
-        return true;
+        config = new ExampleConfig(fileHandler);
+        return reload();
     }
 
     // No need for an onDisable method here as Commands & Listeners are automatically unregistered!
@@ -59,7 +66,7 @@ public class ExampleComponent extends Component implements Listener {
     @Override
     protected void save() {
         try {
-            config.save();
+            config.saveConfig();
         } catch (IOException e) {
             Log.warning(this, "Failed to save config");
             Log.error(this, e);
@@ -70,7 +77,7 @@ public class ExampleComponent extends Component implements Listener {
     // See: ComponentCommandHandler
     @Override
     protected boolean reload() {
-        config.reloadConfig();
+        config.reload();
         return true;
     }
 
