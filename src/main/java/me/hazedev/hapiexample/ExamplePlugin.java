@@ -1,6 +1,6 @@
 package me.hazedev.hapiexample;
 
-import me.hazedev.hapi.bossbar.BossBar;
+import me.hazedev.hapi.bossbar.BossBarComponent;
 import me.hazedev.hapi.component.ComponentManager;
 import me.hazedev.hapi.joinquit.JoinQuitHandler;
 import me.hazedev.hapi.userdata.UserDataManager;
@@ -16,7 +16,7 @@ public class ExamplePlugin extends ComponentManager {
     protected void registerComponents() {
         // There are a few components provided by default
         registerComponent(new UserDataManager());
-        registerComponent(new BossBar());
+        registerComponent(new BossBarComponent());
         registerComponent(new JoinQuitHandler());
 
         // Register our ExampleComponent
